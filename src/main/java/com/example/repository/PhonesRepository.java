@@ -13,6 +13,6 @@ import java.util.List;
  */
 public interface PhonesRepository extends JpaRepository<Phones,Integer> {
 
-    @Query("select corporateId from Phones  where mail is  null OR mail = '' ")
+    @Query("select corporateId from Phones ")
     public List<Integer> findUsedId(Pageable page);
 }

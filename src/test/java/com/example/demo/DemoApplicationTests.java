@@ -99,7 +99,8 @@ public class DemoApplicationTests {
 			}
 			//ExampleMatcher.matching().
 			//Page<Phones> all1 = phonesRepository.findAll(pageable);
-			int usedId = phonesRepository.findUsedId(PageRequest.of(0, 1, Sort.Direction.ASC, "corporateId")).get(0);
+			List<Integer> corporateId = phonesRepository.findUsedId(PageRequest.of(0, 1, Sort.Direction.DESC, "corporateId"));
+			int usedId = corporateId.get(0);
 			String url = "https://www.tianyancha.com/search/suggest.json?key=";
 			List<CorporateNames> all = corporateRepository.selectCorproate(usedId);
 			//all = corporateRepository.findAll();
@@ -115,7 +116,7 @@ public class DemoApplicationTests {
 					params.put("Accept-Language","zh-CN,zh;q=0.8");
 					params.put("Cache-Control","no-cache");
 					params.put("Connection","keep-alive");
-					params.put("Cookie","TYCID=d3b43b90201011e8ad9175ad815931fe; undefined=d3b43b90201011e8ad9175ad815931fe; ssuid=7286007008; RTYCID=e707ee9a8d3e440997ba972d3ec2ac52; aliyungf_tc=AQAAAFAtmAk5rQMAJj7kdKH1ZS/n4XHX; csrfToken=9CkZaoOEYolyCR1PWy8G6MVl; tyc-user-info=%257B%2522token%2522%253A%2522eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMzEyNzcxMjYxMyIsImlhdCI6MTUyMDMwNzIzNSwiZXhwIjoxNTM1ODU5MjM1fQ.1KRN5N0LA4Io-D25kbYAVZsDPdQZrTGHl1cSJ-5YyUjzNGaUYgYBvXC4eCfCrdwUdzVw3RdfSb20SbdJiGNe2A%2522%252C%2522integrity%2522%253A%25220%2525%2522%252C%2522state%2522%253A%25220%2522%252C%2522vipManager%2522%253A%25220%2522%252C%2522vnum%2522%253A%25220%2522%252C%2522onum%2522%253A%25220%2522%252C%2522mobile%2522%253A%252213127712613%2522%257D; auth_token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMzEyNzcxMjYxMyIsImlhdCI6MTUyMDMwNzIzNSwiZXhwIjoxNTM1ODU5MjM1fQ.1KRN5N0LA4Io-D25kbYAVZsDPdQZrTGHl1cSJ-5YyUjzNGaUYgYBvXC4eCfCrdwUdzVw3RdfSb20SbdJiGNe2A; Hm_lvt_e92c8d65d92d534b0fc290df538b4758=1520229210,1520232438,1520301239,1520307238; Hm_lpvt_e92c8d65d92d534b0fc290df538b4758=1520309929");
+					params.put("Cookie","TYCID=e24314e021e311e8841d13eb2796ebdd; undefined=e24314e021e311e8841d13eb2796ebdd; ssuid=7649319028; tyc-user-info=%257B%2522token%2522%253A%2522eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMzEyNzcxMjYxMyIsImlhdCI6MTUyMDQxMjMzNCwiZXhwIjoxNTM1OTY0MzM0fQ.MJ_WLLNQfDE-K2kYCnwTeB6w6FZZuvfBJNTvOmgTeUrGUV8XpB_wd0dWPjLWKMcb4aV4TIE2usbhny1QIQz2wA%2522%252C%2522integrity%2522%253A%25220%2525%2522%252C%2522state%2522%253A%25220%2522%252C%2522vipManager%2522%253A%25220%2522%252C%2522vnum%2522%253A%25220%2522%252C%2522onum%2522%253A%25220%2522%252C%2522mobile%2522%253A%252213127712613%2522%257D; auth_token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMzEyNzcxMjYxMyIsImlhdCI6MTUyMDQxMjMzNCwiZXhwIjoxNTM1OTY0MzM0fQ.MJ_WLLNQfDE-K2kYCnwTeB6w6FZZuvfBJNTvOmgTeUrGUV8XpB_wd0dWPjLWKMcb4aV4TIE2usbhny1QIQz2wA; RTYCID=5675ebdcae754d9598cc804951df3889; aliyungf_tc=AQAAAKHcfnr9ngYAJj7kdGngvXuDg8vi; csrfToken=wBoZFv_LwF9Wo5q4lNgrftsO; Hm_lvt_e92c8d65d92d534b0fc290df538b4758=1520412330,1520412995; Hm_lpvt_e92c8d65d92d534b0fc290df538b4758=1520413206");
 					params.put("Host","www.tianyancha.com");
 					params.put("Pragma","no-cache");
 					params.put("Upgrade-Insecure-Requests","1");
@@ -157,7 +158,7 @@ public class DemoApplicationTests {
 						params1.put("Accept-Language","zh-CN,zh;q=0.8");
 						params1.put("Cache-Control","no-cache");
 						params1.put("Connection","keep-alive");
-						params1.put("Cookie","TYCID=d3b43b90201011e8ad9175ad815931fe; undefined=d3b43b90201011e8ad9175ad815931fe; ssuid=7286007008; RTYCID=e707ee9a8d3e440997ba972d3ec2ac52; aliyungf_tc=AQAAAFAtmAk5rQMAJj7kdKH1ZS/n4XHX; csrfToken=9CkZaoOEYolyCR1PWy8G6MVl; tyc-user-info=%257B%2522token%2522%253A%2522eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMzEyNzcxMjYxMyIsImlhdCI6MTUyMDMwNzIzNSwiZXhwIjoxNTM1ODU5MjM1fQ.1KRN5N0LA4Io-D25kbYAVZsDPdQZrTGHl1cSJ-5YyUjzNGaUYgYBvXC4eCfCrdwUdzVw3RdfSb20SbdJiGNe2A%2522%252C%2522integrity%2522%253A%25220%2525%2522%252C%2522state%2522%253A%25220%2522%252C%2522vipManager%2522%253A%25220%2522%252C%2522vnum%2522%253A%25220%2522%252C%2522onum%2522%253A%25220%2522%252C%2522mobile%2522%253A%252213127712613%2522%257D; auth_token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMzEyNzcxMjYxMyIsImlhdCI6MTUyMDMwNzIzNSwiZXhwIjoxNTM1ODU5MjM1fQ.1KRN5N0LA4Io-D25kbYAVZsDPdQZrTGHl1cSJ-5YyUjzNGaUYgYBvXC4eCfCrdwUdzVw3RdfSb20SbdJiGNe2A; Hm_lvt_e92c8d65d92d534b0fc290df538b4758=1520229210,1520232438,1520301239,1520307238; Hm_lpvt_e92c8d65d92d534b0fc290df538b4758=1520309929");
+						params1.put("Cookie","TYCID=e24314e021e311e8841d13eb2796ebdd; undefined=e24314e021e311e8841d13eb2796ebdd; ssuid=7649319028; tyc-user-info=%257B%2522token%2522%253A%2522eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMzEyNzcxMjYxMyIsImlhdCI6MTUyMDQxMjMzNCwiZXhwIjoxNTM1OTY0MzM0fQ.MJ_WLLNQfDE-K2kYCnwTeB6w6FZZuvfBJNTvOmgTeUrGUV8XpB_wd0dWPjLWKMcb4aV4TIE2usbhny1QIQz2wA%2522%252C%2522integrity%2522%253A%25220%2525%2522%252C%2522state%2522%253A%25220%2522%252C%2522vipManager%2522%253A%25220%2522%252C%2522vnum%2522%253A%25220%2522%252C%2522onum%2522%253A%25220%2522%252C%2522mobile%2522%253A%252213127712613%2522%257D; auth_token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMzEyNzcxMjYxMyIsImlhdCI6MTUyMDQxMjMzNCwiZXhwIjoxNTM1OTY0MzM0fQ.MJ_WLLNQfDE-K2kYCnwTeB6w6FZZuvfBJNTvOmgTeUrGUV8XpB_wd0dWPjLWKMcb4aV4TIE2usbhny1QIQz2wA; RTYCID=5675ebdcae754d9598cc804951df3889; aliyungf_tc=AQAAAKHcfnr9ngYAJj7kdGngvXuDg8vi; csrfToken=wBoZFv_LwF9Wo5q4lNgrftsO; Hm_lvt_e92c8d65d92d534b0fc290df538b4758=1520412330,1520412995; Hm_lpvt_e92c8d65d92d534b0fc290df538b4758=1520413206");
 						params1.put("Host","www.tianyancha.com");
 						params1.put("Pragma","no-cache");
 						params1.put("Upgrade-Insecure-Requests","1");
@@ -191,8 +192,8 @@ public class DemoApplicationTests {
 							try {
 								//ExampleMatcher matcher = ExampleMatcher.matching();
 								Optional<Phones> one = phonesRepository.findOne(Example.of(phones));
-								Phones phones1 = one.get();
-								if(phones1!=null){
+								if(!Optional.empty().equals(one)){
+									Phones phones1 = one.get();
 									phones1.setPhone(phone);
 									phones1.setMail(mail);
 									phonesRepository.saveAndFlush(phones1);
