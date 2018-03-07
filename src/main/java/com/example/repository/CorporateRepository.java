@@ -16,6 +16,6 @@ import java.util.List;
  * @email : huangcy01@zendaimoney.com
  **/
 public interface  CorporateRepository extends JpaRepository<CorporateNames,Integer> {
-    @Query("select u from CorporateNames u where u.id > ?1")
+    @Query("select u from CorporateNames u where u.id >= ?1")
     List<CorporateNames> selectCorproate(int id);
 }

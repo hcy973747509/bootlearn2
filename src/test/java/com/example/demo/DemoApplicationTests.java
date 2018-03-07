@@ -20,16 +20,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -91,16 +85,16 @@ public class DemoApplicationTests {
 
 	@Test
 	public void getQxbPhone(){
-		Sort sort = new Sort(Sort.Direction.DESC, "corporateId");
-		Pageable pageable = new PageRequest(0, 1, sort);
-		Page<Phones> all1 = phonesRepository.findAll(pageable);
+		//ExampleMatcher.matching().
+		//Page<Phones> all1 = phonesRepository.findAll(pageable);
+		int usedId = phonesRepository.findUsedId(PageRequest.of(0, 1,Sort.Direction.ASC, "corporateId")).get(0);
 		String url = "https://www.tianyancha.com/search/suggest.json?key=";
-        List<CorporateNames> all = corporateRepository.selectCorproate(all1.getContent().get(0).getCorporateId());
+        List<CorporateNames> all = corporateRepository.selectCorproate(usedId);
+        //all = corporateRepository.findAll();
         int i = 0;
         for (CorporateNames corporateNames : all) {
-        	i++;
 			try {
-				Thread.sleep(1000L);
+				//Thread.sleep(1000L);
 				//System.out.println(url + URLUtil.encode(corporateNames.getCorporateName()));
 				//String content = HttpUtil.get(url + URLUtil.encode(corporateNames.getCorporateName()));
 				Map<String, String> params = new HashMap<>();
@@ -120,11 +114,27 @@ public class DemoApplicationTests {
 					jsonObject = JSONUtil.parseObj(content);
 				} catch (Exception e) {
 					System.out.println(">>>>>>>>>>>>>>>>>更新了"+i+"条数据");
+					this.getQxbPhone();
 					break;
 				}
 				Object data = jsonObject.get("data");
 				JSONArray objects = JSONUtil.parseArray(data);
 				if(objects.size() == 0){
+					Phones phones = new Phones();
+					phones.setCorporateId(corporateNames.getId());
+					try {
+						//ExampleMatcher matcher = ExampleMatcher.matching();
+						Optional<Phones> one = phonesRepository.findOne(Example.of(phones));
+						Phones phones1 = one.get();
+						if(phones1!=null){
+							phones1.setMail("未知!");
+							phonesRepository.saveAndFlush(phones1);
+						}else{
+							phones.setMail("未知!");
+							phonesRepository.saveAndFlush(phones);
+						}
+					} catch (Exception e) {
+					}
                     continue;
                 }
 				Object id = JSONUtil.parseObj(objects.get(0)).get("id");
@@ -143,35 +153,69 @@ public class DemoApplicationTests {
 					params1.put("User-Agent","Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 UBrowser/6.2.3964.2 Safari/537.36");
 					String content1 = HttpUtil.createGet(urlC + id.toString()).addHeaders(params1).execute().body();
                     Document parse = Jsoup.parse(content1, "utf-8");
-                    Elements select = parse.select("div.f14.sec-c2>div.in-block.vertical-top.overflow-width.mr20>span");
+                    Elements select = parse.select("div.f14.sec-c2>div>span");
                     //Elements select = select1.select("span");
                     String phone = "";
+                    String mail = "";
                     String regex = "^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\\d{8}$";
+                    String parent = "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
                     for (Element element : select) {
-                        if (StrUtil.equalsIgnoreCase("查看更多",element.text())){
+						if (StrUtil.equalsIgnoreCase("查看更多",element.text())){
                             Elements script = select.select("script");
-                            phone = script.html();break;
-                        }else {
-                            if(element.text().contains("021") || element.text().matches(regex)){
-                                phone = element.text();
-                            }
+                            phone = script.html();
                         }
+                        if(element.text().contains("021") || element.text().matches(regex)){
+                                phone = element.text();
+                        }
+						if(element.html().matches(parent)){
+							mail = element.html();
+						}
                     }
+                    if (StrUtil.isBlank(mail)){
+                    	mail="未知!";
+					}
                     if (StrUtil.isNotBlank(phone)){
                         Phones phones = new Phones();
                         phones.setCorporateId(corporateNames.getId());
-                        phones.setPhone(phone);
 						try {
-							Phones save = phonesRepository.save(phones);
+							//ExampleMatcher matcher = ExampleMatcher.matching();
+							Optional<Phones> one = phonesRepository.findOne(Example.of(phones));
+							Phones phones1 = one.get();
+							if(phones1!=null){
+								phones1.setPhone(phone);
+								phones1.setMail(mail);
+								phonesRepository.saveAndFlush(phones1);
+							}else{
+								phones.setPhone(phone);
+								phones.setMail(mail);
+								phonesRepository.saveAndFlush(phones);
+							}
+						} catch (Exception e) {
+						}
+					}else {
+						Phones phones = new Phones();
+						phones.setCorporateId(corporateNames.getId());
+						try {
+							//ExampleMatcher matcher = ExampleMatcher.matching();
+							Optional<Phones> one = phonesRepository.findOne(Example.of(phones));
+							Phones phones1 = one.get();
+							if(phones1!=null){
+								phones1.setMail("未知!");
+								phonesRepository.saveAndFlush(phones1);
+							}else{
+								phones.setMail("未知!");
+								phonesRepository.saveAndFlush(phones);
+							}
 						} catch (Exception e) {
 						}
 					}
                 }
 			} catch (UtilException e) {
 
-			} catch (InterruptedException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			i++;
 		}
     }
 

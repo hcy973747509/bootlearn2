@@ -26,4 +26,6 @@ public class Phones implements Serializable{
     private Integer corporateId;
 
     private String phone;
+
+    private String mail;
 }
