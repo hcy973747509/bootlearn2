@@ -13,6 +13,7 @@ import com.example.dto.Phones;
 import com.example.repository.CorporateRepository;
 import com.example.repository.PhonesRepository;
 import com.example.service.AsyncService;
+import org.assertj.core.util.Strings;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -231,5 +232,47 @@ public class DemoApplicationTests {
 			}
 		}
     }
+
+
+    @Test
+    public void get58Names(){
+		int i = 1;
+		while(true){
+			String url = "http://sh.ganji.com/zpbiaoqian/chongming/o"+i;
+			String content = HttpUtil.get(url);
+			Document parse = Jsoup.parse(content, "utf-8");
+			Elements tables = parse.select("dl.con-list-zcon.new-dl");
+			if(tables.size() <= 0){
+				break;
+			}
+			tables.remove(0);
+			for (Element table : tables) {
+				CorporateNames corporateNames = new CorporateNames();
+				String gsmc = table.select("p.s-tit14.fl").text();
+				String detail = table.select("div.s-butt.s-bb1").attr("post");
+				Date date = new Date();
+				corporateNames.setCorporateName(gsmc);
+				corporateNames.setJobInfo(detail);
+				corporateNames.setMontyPay("");
+				corporateNames.setPublishDate("");
+				corporateNames.setSource("赶集");
+				corporateNames.setPhone("");
+				corporateNames.setCreateDate(date);
+				try {
+					CorporateNames save = corporateRepository.save(corporateNames);
+				} catch (Exception e) {
+				}
+			}
+			i++;
+
+		}
+		System.out.println("爬取数据结束!共"+i);
+	}
+
+	@Test
+	public void update58(){
+		List<String> strings = corporateRepository.selectCorproateByPhone();
+		System.out.println(strings);
+	}
 
 }

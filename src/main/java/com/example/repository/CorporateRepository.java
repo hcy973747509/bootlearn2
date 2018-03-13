@@ -18,4 +18,7 @@ import java.util.List;
 public interface  CorporateRepository extends JpaRepository<CorporateNames,Integer> {
     @Query("select u from CorporateNames u where u.id >= ?1")
     List<CorporateNames> selectCorproate(int id);
+
+    @Query("select u.jobInfo from CorporateNames u where u.source='赶集' and u.phone='' and u.jobInfo != '' order by id asc")
+    List<String> selectCorproateByPhone();
 }

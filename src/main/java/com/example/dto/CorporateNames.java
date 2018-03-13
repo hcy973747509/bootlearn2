@@ -36,4 +36,8 @@ public class CorporateNames implements Serializable{
 
     @Column(name = "createDate")
     private Date createDate;
+
+    private String phone;
+
+    private String source;
 }
